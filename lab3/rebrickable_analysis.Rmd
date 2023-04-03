@@ -15,15 +15,12 @@ Prerequisite libraries:
 #install.packages('R.utils', repos = "http://cran.us.r-project.org")
 #install.packages("waffle", repos = "http://cran.us.r-project.org")
 #install.packages("treemapify", repos = "http://cran.us.r-project.org")
-#install.packages("shinythemes", repos = "http://cran.us.r-project.org")
 library(data.table)
 library(tidyr)
 library(ggplot2)
 library(dplyr)
 library(waffle)
 library(treemapify)
-library(shiny)
-library(shinythemes)
 ```
 
 ***
