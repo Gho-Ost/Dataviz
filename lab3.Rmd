@@ -1,0 +1,62 @@
+---
+title: "Lab3"
+author: "Me"
+date: "`r Sys.Date()`"
+output:
+  html_document: 
+    toc_float: yes
+    theme: sandstone
+    number_sections: yes
+    keep_md: yes
+  pdf_document: default
+---
+
+# lottery
+
+```{r parameters, echo=F}
+sample_size <- 10000
+```
+
+
+I will randomly sample **`r sample_size`** numbers and calculate their mean.
+Remember to set the seed!
+```{r data_sampling, results='hide', cashe=T}
+set.seed(23)
+x <- rnorm(sample_size)
+m <- mean(x)
+m
+```
+```{r plot}
+plot(x)
+```
+
+```{r data2, echo=F, message=F, warning=F, error=F}
+library("dplyr")
+library("ggplot2")
+p <- ggplot(data.frame(x=x), aes(x=x)) + 
+  geom_histogram(bins=50, fill="#009988") +
+  geom_vline(xintercept=m) +
+  scale_fill_brewer("set1") +
+  theme_bw()
+p
+```
+
+```{r kable}
+df <- data.frame(a = rnorm(26), b = LETTERS)
+knitr::kable(summary(df))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
