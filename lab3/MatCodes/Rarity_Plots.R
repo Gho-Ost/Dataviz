@@ -14,30 +14,43 @@ merged_df_inventory_parts <- merge(merged_df_inventories, inventory_parts, by="i
 
 merged_df_inventory_parts_final <- merge(merged_df_inventory_parts, parts, by = "part_num")
 
-# Uncomment below, maybe
-#merged_result <- merge(merged_df_inventory_parts_final, part_categories, by="part_cat_id")
-
-# Oh my Fucking God how did my computer not die 
-
 parts_count <- merged_df_inventory_parts_final %>% count(part_num, name = "count")
 merged_counts <- merge(merged_df_inventory_parts_final, parts_count, by = "part_num", all.x=T)
 result <- merged_counts %>%
   filter(count == 1)
 
-# I can finally plot oh boy
+# Plots
 result<-result %>%
   count(name.y)
 result<-na.omit(result)
 result<-arrange(result, desc(n))
 result<-head(result,20)
 
-# Possibly drop database sets
-
+# Plot 1 A->including the Database Sets Theme
 ggplot(result, aes(x = n, y = reorder(name.y, n))) +
   geom_col(fill = "lightblue") +
-  labs(title = "20 Themes with the Highest Amount of Rare LEGO Blocks",
-       x = "Number of Rare Blocks",
+  labs(title = "20 Themes with the Highest Amount of Unique LEGO Parts",
+       x = "Number of Unique Parts",
        y = "Theme")
+
+#Creating alternative visualization without Database Sets
+result_2 <- merged_counts %>%
+  filter(count == 1)
+result_2<-result_2 %>%
+  count(name.y)
+result_2<-na.omit(result_2)
+result_2<-arrange(result_2, desc(n))
+result_2 <- filter(result_2, name.y != "Database Sets")
+result_2<-head(result_2,20)
+
+#Plot 1 B-> Excluding Database Sets
+ggplot(result_2, aes(x = n, y = reorder(name.y, n))) +
+  geom_col(fill = "lightblue") +
+  labs(title = "20 Themes with the Highest Amount of Unique LEGO Parts",
+       x = "Number of Unique Parts",
+       y = "Theme")
+
+################################################################################
 
 # plot of number of unique pieces through the years
 result <- merged_counts %>%
@@ -46,18 +59,21 @@ result<-result %>%
   count(year)
 result<-na.omit(result)
 
-
+#Plot 2
 ggplot(result, aes(x = year, y = n)) +
   geom_line() +
-  labs(x = "Year", y = "Number of rare Lego blocks")
+  labs(x = "Year", y = "Number of Unique Lego Parts") +
+  ggtitle("Number of Unique Lego Blocks per Year")
 
 result_cumsum <- result %>%
   arrange(year) %>%
   mutate(n_cumsum = cumsum(n))
 
+#Plot 3
 ggplot(result_cumsum, aes(x = year, y = n_cumsum)) +
   geom_line() +
-  labs(x = "Year", y = "Number of rare Lego blocks")
+  labs(x = "Year", y = "Number of Rare Lego Parts") +
+  ggtitle("Cumulative Sum of Rare Lego Parts through Years")
 
 # Last plot -> scatterplot 
 result <- merged_counts
@@ -67,8 +83,14 @@ theme_counts <- result %>%
   arrange(desc(count))
 
 theme_counts<-head(arrange(theme_counts,desc(count)),100)
+theme_counts <- theme_counts %>% rename('Average Number of Parts' = num_parts) %>%
+  rename('Number of Rare Lego Parts'=count)
 
-ggplotly(ggplot(theme_counts, aes(x = num_parts, y = count, text = name.y)) +
+#Plot 4 ->Interactive
+ggplotly(ggplot(theme_counts, aes(x = theme_counts$'Average Number of Parts',
+                                         y = theme_counts$'Number of Rare Lego Parts',
+                                         text = name.y)) +
            geom_point() +
-           labs(x = "Average Number of Parts", y = "Sum of Counts"))
+           labs(x = "Average Number of Parts", y = "Number of Rare Lego Parts") +
+           ggtitle("Number of Rare Lego Parts vs Average Number of Parts for a Theme"))
 
