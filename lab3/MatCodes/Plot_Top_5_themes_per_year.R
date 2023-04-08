@@ -3,7 +3,6 @@ themes <- read.csv("C:\\Users\\Komputer\\OneDrive\\Pulpit\\rebrickable\\themes.c
 
 # Join the themes dataframe to the sets dataframe based on the theme_id column
 merged_df <- merge(sets, themes, by.x = "theme_id", by.y = "id", all.x = TRUE)
-library(dplyr)
 
 sets_per_theme_per_year <- merged_df %>%
   group_by(year, name.y) %>%
@@ -23,9 +22,6 @@ merged_df_popularity<- subset(merged_df_popularity, popularity <= 5)
 
 
 
-
-
-library(dplyr)
 
 # Group by year and popularity ranking and count the number of occurrences
 popularity_counts <- merged_df_popularity %>%
@@ -48,11 +44,6 @@ new_popularity <- first_row$popularity + 1
 merged_df_popularity <- merged_df_popularity %>%
   mutate(popularity = ifelse(year == first_row$year & name.y == first_row$name.y,
                              new_popularity, popularity))
-
-
-
-
-
 
 
 
@@ -91,14 +82,6 @@ while (nrow(popularity_counts) > 0) {
 
 merged_df_popularity<- subset(merged_df_popularity, popularity <= 5)
 
-# Oh my Fucking God I can finally plot this bitch
-
-ggplot(head(merged_df_popularity,10), aes(x = year, y = popularity, color = name.y)) +
-  geom_line() +
-  labs(title = "Popularity of Themes Over Time", 
-       x = "Year", y = "Popularity Ranking")
-
-# NEvermind I fucking cannot, let's go again
 selected_years <- c(1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020)
 
 popular_themes <- merged_df %>%
@@ -113,30 +96,31 @@ theme_year_counts <- merged_df_filtered %>%
   summarise(num_sets = n()) %>%
   ungroup()
 
-p<-ggplot(data = theme_year_counts, aes(x = year, y = num_sets, color = name.y)) +
-  geom_line(size = 1) +
-  scale_x_continuous(breaks = selected_years) +
-  labs(x = "Year", y = "Number of sets", color = "Theme")
-
-
-p <- ggplotly(p, tooltip = c("name.y", "num_sets"))
-p <- style(p, hoveron = "plot")
-p
-
-
-
-# Let's go one more thingy
 theme_year_counts_cumsum <- theme_year_counts %>%
   group_by(name.y) %>%
   mutate(cum_sum = cumsum(num_sets))
 
-
+#Plot 1->CumSum of Sets for Chosen Themes
 ggplot(data = theme_year_counts_cumsum, aes(x = year, y = cum_sum, color = name.y)) +
   geom_line(size = 1) +
   scale_x_continuous(breaks = selected_years) +
-  labs(x = "Year", y = "Number of sets", color = "Theme")
+  labs(x = "Year", y = "Number of Sets", color = "Theme") +
+  ggtitle("Cumulative Sum of Sets for Chosen Themes")
 
-
-
-### You can also correlate the growth of company with number of produced sets and 
-# correlate number of sets with release of star wars films
+star_wars_counts <- theme_year_counts %>% filter(name.y == "Star Wars")
+film_releases=c(1999,2002,2005,2015,2017,2019)
+film_colors=c("red", "orange", "green", "blue", "purple", "brown")
+film_labels=c("The Phantom Menace", "Attack of the Clones", "Revenge of the Sith",
+              "The Force Awakens", "The Last Jedi", "The Rise of Skywalker")
+#Plot 2-> Star Wars Plot
+ggplot(data = star_wars_counts, aes(x = year, y = num_sets)) +
+  geom_line(size = 1) +
+  scale_x_continuous(breaks = selected_years) +
+  labs(x = "Year", y = "Number of Sets") +
+  ggtitle("Number of Produced Star Wars Sets") +
+  geom_vline(xintercept = film_releases, color = film_colors, linetype="dotted") +
+  annotate("text", x = film_releases[1:3]+0.2, y = max(star_wars_counts$num_sets)*0.4, 
+           label = film_labels[1:3], color = film_colors[1:3], angle = 90, hjust = -0.2, size=3) +
+  annotate("text", x = film_releases[4:6]+0.2, y = 0, label = film_labels[4:6], 
+           color = film_colors[4:6], angle = 90, hjust = -0.2, size=3) +
+  theme(legend.position = "none")
