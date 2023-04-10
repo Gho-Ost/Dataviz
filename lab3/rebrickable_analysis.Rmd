@@ -1,6 +1,6 @@
 ---
 title: "Rebrickable exploration"
-author: "Bartek"
+author: "Mateusz, Bartek"
 date: "`r Sys.Date()`"
 output: 
   html_document: 
