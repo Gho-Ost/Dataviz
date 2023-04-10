@@ -6,6 +6,7 @@ output:
   html_document: 
     css: custom.css
     theme: null
+    toc: true
 ---
 
 <style>
