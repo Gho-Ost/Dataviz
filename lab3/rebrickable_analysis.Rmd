@@ -1,6 +1,6 @@
 ---
 title: "Rebrickable exploration"
-author: "Mateusz, Bartek"
+author: "Bartek"
 date: "`r Sys.Date()`"
 output: 
   html_document: 
@@ -17,6 +17,11 @@ output:
     overflow-x: hidden;
 }
 </style>
+
+
+```{r knitrsetup, include = FALSE}
+knitr::opts_chunk$set(fig.align = 'center')
+```
 
 Prerequisite libraries:
 
@@ -41,6 +46,11 @@ sets <- fread("rebrickable/sets.csv.gz")
 themes <- fread("rebrickable/themes.csv.gz")
 part_categories <- fread("rebrickable/part_categories.csv.gz")
 parts <- fread("rebrickable/parts.csv.gz")
+```
+
+```{r graphsetup}
+background_color <- "#2d2d2d"
+font_color <- "white"
 ```
 
 ------------------------------------------------------------------------
@@ -77,8 +87,8 @@ set_themes_children <- set_themes_children %>%
 
 <div class="vscroll-plot">
 
-```{r Bridge, fig.height=40, echo=F, fig.align='center'}
-# rainbow density ## good?
+```{r Bridge, fig.height=40, echo=F}
+# make better vertical lines
 set_themes_children %>% 
   ggplot(aes(x=year, y=as.character(parent_name), fill=as.character(parent_name))) +
   geom_density_ridges(alpha=0.6, bandwidth=1.7) +
@@ -129,7 +139,7 @@ film_releases=c(1999,2002,2005,2015,2017,2019)
 film_colors=c("red", "orange", "green", "blue", "purple", "brown")
 film_labels=c("The Phantom Menace", "Attack of the Clones", "Revenge of the Sith",
               "The Force Awakens", "The Last Jedi", "The Rise of Skywalker")
-#Plot 2-> Star Wars Plot
+
 ggplot(data = star_wars_counts, aes(x = year, y = num_sets)) +
   geom_line(size = 1) +
   scale_x_continuous(breaks = selected_years) +
@@ -150,6 +160,8 @@ ggplot(data = star_wars_counts, aes(x = year, y = num_sets)) +
 
 ------------------------------------------------------------------------
 
+Table of parent themes
+
 ```{r Bdatable}
 set_themes <- sets %>% 
   rename(set_name=name) %>%
@@ -160,7 +172,6 @@ set_theme_inventories_parts <- inventory_parts %>% merge(set_theme_inventories, 
 set_theme_inventories_parts_colors <- colors %>% rename(color_name=name) %>% 
   merge(set_theme_inventories_parts, by.x="id", by.y="color_id") %>% rename(color_id=id)
 
-# Datable (no children themes?)
 theme_colors <- set_theme_inventories_parts_colors %>% filter(is.na(parent_id)) %>%
   select(one_of(c("color_name","rgb","theme_name","theme_id","color_id")))
 
@@ -373,11 +384,11 @@ top_colors <- color_sums %>% arrange(sum) %>% tail(top_n) %>% mutate(order = seq
 
 top_colors %>% ggplot(aes(area=sum, fill=factor(order), label=rgb)) + 
   geom_treemap() +
-  geom_treemap_text(min.size = 8, size=20, color=c(rep("#ffffff", nrow(top_colors)-3), 1, rep("#ffffff", 2))) +
+  geom_treemap_text(min.size = 8, size=20, color=c(rep("white", nrow(top_colors)-3), 1, rep("white", 2))) +
   scale_fill_manual(values=rgb(top_colors$r, top_colors$g, top_colors$b, maxColorValue=255)) +
   ggtitle("Most frequent colors") +
-  theme(legend.position="none", plot.background = element_rect(fill="#2d2d2d"),
-        plot.title=element_text(hjust=.5, size=25, colour = "#d1d1d1"))
+  theme(legend.position="none", plot.background = element_rect(fill=background_color),
+        plot.title=element_text(hjust=.5, size=25, colour = font_color))
 ```
 
 On the figure we can observe that the most common colors used are different shades of grey. A characteristic tone of yellow, blue and red are also present in the treemap.
@@ -395,14 +406,14 @@ trans_count %>%
   coord_polar("y", start = 0) + 
   ggtitle("Proportion of transparent colors") +
   theme_void() +
-  geom_text(nudge_y = c(-45,-19), nudge_x = c(0.0025,0.2), size=9, color="white", fontface="bold") +
-  theme(plot.title = element_text(hjust=0.3, vjust=0.1, color="#d1d1d1", size=25),
-        plot.background = element_rect(fill="#2d2d2d"),
+  geom_text(nudge_y = c(-45,-19), nudge_x = c(0.0025,0.2), size=9, color=font_color, fontface="bold") +
+  theme(plot.title = element_text(hjust=0.3, vjust=0.1, color=font_color, size=25),
+        plot.background = element_rect(fill=background_color),
         axis.ticks.length = unit(0, "pt"),
         legend.position = "none") +
   guides(fill=guide_legend(title="Is transparent  ")) + 
-  annotate(geom="text", x=1.9, y=20, label="Transparent", size=7, color="white") + 
-  annotate(geom="text", x=1.9, y=125, label="Non-transparent", size=7, color="white")
+  annotate(geom="text", x=1.9, y=20, label="Transparent", size=7, color=font_color) + 
+  annotate(geom="text", x=1.9, y=125, label="Non-transparent", size=7, color=font_color)
 ```
 
 
