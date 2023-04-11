@@ -1,6 +1,6 @@
 ---
 title: "Rebrickable exploration"
-author: "Bartek"
+author: "Mateusz Tabaszewski, Bartłomiej Pukacki"
 date: "`r Sys.Date()`"
 output: 
   html_document: 
@@ -19,8 +19,8 @@ output:
 </style>
 
 
-```{r knitrsetup, include = FALSE}
-knitr::opts_chunk$set(fig.align = 'center')
+```{r monogram, out.width = "100px", echo=F, fig.align='left'}
+knitr::include_graphics("imgs/PP_monogram_kontur.png")
 ```
 
 Prerequisite libraries:
@@ -393,7 +393,7 @@ top_colors %>% ggplot(aes(area=sum, fill=factor(order), label=rgb)) +
 
 On the figure we can observe that the most common colors used are different shades of grey. A characteristic tone of yellow, blue and red are also present in the treemap.
 
-```{r Btransparency, fig.height=5.9, fig.width=5.5}
+```{r Btransparency, fig.height=5.9, fig.width=5.5, fig.align='center'}
 trans_count <- colors %>% group_by(is_trans) %>% summarise(count = n()) %>% 
   mutate(
     proportions = paste(round(count/sum(count),2)*100, "%", sep=''),
@@ -418,12 +418,6 @@ trans_count %>%
 
 
 
-
-
-
-
-
-
-
-
-
+```{r logo, out.width = "700px", echo=F, fig.align='left'}
+knitr::include_graphics("imgs/PP_logotyp_black.png")
+```
