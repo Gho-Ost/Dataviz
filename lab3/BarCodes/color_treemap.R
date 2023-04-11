@@ -1,5 +1,5 @@
-#install.packages('R.utils')
-#install.packages("treemapify")
+install.packages('R.utils')
+install.packages("treemapify")
 library(data.table)
 library(tidyr)
 library(ggplot2)
