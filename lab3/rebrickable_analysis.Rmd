@@ -9,6 +9,7 @@ output:
     toc: true
 ---
 
+```{=html}
 <style>
 .vscroll-plot {
     width: 800px;
@@ -17,8 +18,7 @@ output:
     overflow-x: hidden;
 }
 </style>
-
-
+```
 ```{r monogram, out.width = "100px", echo=F, fig.align='left'}
 knitr::include_graphics("imgs/PP_monogram_kontur.png")
 ```
@@ -51,6 +51,17 @@ parts <- fread("rebrickable/parts.csv.gz")
 ```{r graphsetup}
 background_color <- "#2d2d2d"
 font_color <- "white"
+tick_color <- "#DDDDDD"
+title_size <- 20
+label_size <- 16
+tick_size <- 12
+grid_size <- 0.5
+
+code_chunk_length <- 9.67
+
+orange <- "#FF7E67"
+coral <- "#FFFFC0"
+teal <- "#40C0C0"
 ```
 
 ------------------------------------------------------------------------
@@ -85,8 +96,7 @@ set_themes_children <- set_themes_children %>%
   mutate(parent_name = ifelse(parent_name=="parent", theme_name, parent_name))
 ```
 
-<div class="vscroll-plot">
-
+::: vscroll-plot
 ```{r Bridge, fig.height=40, echo=F}
 # make better vertical lines
 set_themes_children %>% 
@@ -98,8 +108,7 @@ set_themes_children %>%
   theme(legend.position = "none", plot.title = element_text(hjust=2, size=20),
         axis.title.y = element_blank()) 
 ```
-
-</div>
+:::
 
 Top 5 cumsum
 
@@ -153,10 +162,9 @@ ggplot(data = star_wars_counts, aes(x = year, y = num_sets)) +
   theme(legend.position = "none")
 ```
 
-
 ------------------------------------------------------------------------
 
-### Theme ~ set
+### Themes ~ sets
 
 ------------------------------------------------------------------------
 
@@ -237,7 +245,7 @@ ggplot(result_cumsum, aes(x = year, y = n_cumsum)) +
 
 Unique vs average in a theme
 
-```{r Muniquevsaverage, warning=F} 
+```{r Muniquevsaverage, warning=F}
 result <- merged_counts
 theme_counts <- result %>%
   group_by(name.y) %>%
@@ -280,7 +288,7 @@ ggplot(data = avg_parts_per_year, aes(x = year, y = avg_parts)) +
 
 20 themes with the highest amount of unique lego parts
 
-```{r Mpartthemes}
+```{r Mpartthemes, fig.width=code_chunk_length}
 result_2 <- merged_counts %>%
   filter(count == 1)
 result_2<-result_2 %>%
@@ -292,15 +300,22 @@ result_2<-head(result_2,20)
 
 # Excluding Database Sets
 ggplot(result_2, aes(x = n, y = reorder(name.y, n))) +
-  geom_col(fill = "lightblue") +
+  geom_col(fill = coral) +
   labs(title = "20 Themes with the Highest Amount of Unique LEGO Parts",
        x = "Number of Unique Parts",
-       y = "Theme")
+       y = "Theme")+
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust = 4),
+        axis.title.x = element_text(size=label_size, colour = font_color, hjust=0.2),
+        axis.title.y = element_text(size=label_size, colour = font_color),
+        axis.text = element_text(size=tick_size, color = tick_color),
+        panel.grid = element_line(color="#DDDDDD"),
+        panel.background = element_rect(fill=background_color))
 ```
 
 Average and maximum parts per theme
 
-```{r Mavmaxparttheme}
+```{r Mavmaxparttheme, fig.width=code_chunk_length}
 theme_part_counts <- merged_df %>%
   group_by(name.y) %>%
   summarize(avg_parts = mean(num_parts))
@@ -318,19 +333,28 @@ top_20_max_parts <- head(theme_part_counts %>% arrange(desc(max_parts)),20)
 # Second Plot
 # Version A with Dots
 ggplot(top_20_avg_parts, aes(x = reorder(name.y, avg_parts), y = avg_parts)) +
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity", fill=coral) +
   coord_flip() +
   labs(x = "Theme", y = "Average Number of Parts") +
-  geom_point(aes(reorder(name.y, avg_parts),y=max_parts)) +
-  ggtitle("Average and Maximum Number of Parts in Themes for Chosen Themes")
+  geom_point(aes(reorder(name.y, avg_parts),y=max_parts), color=background_color, 
+             fill= coral, shape=21, size=3, stroke=1.5) +
+  ggtitle("Average and Maximum Number of Parts in Selected Themes") +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust = 4),
+        axis.title.x = element_text(size=label_size, colour = font_color, hjust=0.2),
+        axis.title.y = element_text(size=label_size, colour = font_color),
+        axis.text = element_text(size=tick_size, color = tick_color),
+        panel.grid = element_line(color="#DDDDDD"),
+        panel.background = element_rect(fill=background_color))
 ```
-
 
 ------------------------------------------------------------------------
 
 ## Sets
 
 ------------------------------------------------------------------------
+
+### Number of sets over years
 
 ```{r Msetsyearregression}
 num_sets_per_year <- table(sets$year)
@@ -344,12 +368,20 @@ num_sets_per_year_df_new <- head(num_sets_per_year_df,-1)
 exp_model <- lm(log(num_sets_per_year_df_new$num_sets)~ as.integer(num_sets_per_year_df_new$year))
 
 ggplot(num_sets_per_year_df_new, aes(x = year, y = num_sets, group=1)) +
-  geom_line() +
-  geom_smooth(method = "lm", formula = y ~ exp(coef(exp_model)[1] + coef(exp_model)[2] * x), se = FALSE) +
+  geom_line(color = teal, size=1) +
+  geom_smooth(method = "lm", formula = y ~ exp(coef(exp_model)[1] + coef(exp_model)[2] * x), 
+              se = FALSE, color=orange) +
   scale_x_discrete(breaks = selected_years) +
   xlab("Year") +
   ylab("Number of Sets") +
-  ggtitle("Number of Sets per Year")
+  ggtitle("Number of Sets per Year") +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, color = font_color),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.background = element_rect(fill=background_color))
 ```
 
 ------------------------------------------------------------------------
@@ -360,14 +392,15 @@ ggplot(num_sets_per_year_df_new, aes(x = year, y = num_sets, group=1)) +
 
 In the next section we will explore the ***colors*** data.
 
+### Most popular colors
+
 ```{r Btopn, echo=F}
-top_n <- 20
+top_n <- 100
 ```
 
 Here are the ***top `r top_n`*** most frequent colors based on the ***inventory_parts*** table quantities:
 
 ```{r Btopnpreprocessing}
-
 color_id_sums <- inventory_parts %>% group_by(color_id) %>% summarise(sum = sum(quantity))
 
 color_sums <- inner_join(x=colors, y=color_id_sums, by=join_by(id==color_id))
@@ -379,7 +412,7 @@ color_sums <- color_sums %>% mutate(
 )
 ```
 
-```{r Btopncolors}
+```{r Btopncolors, fig.width=code_chunk_length}
 top_colors <- color_sums %>% arrange(sum) %>% tail(top_n) %>% mutate(order = seq.int(top_n))
 
 top_colors %>% ggplot(aes(area=sum, fill=factor(order), label=rgb)) + 
@@ -388,12 +421,14 @@ top_colors %>% ggplot(aes(area=sum, fill=factor(order), label=rgb)) +
   scale_fill_manual(values=rgb(top_colors$r, top_colors$g, top_colors$b, maxColorValue=255)) +
   ggtitle("Most frequent colors") +
   theme(legend.position="none", plot.background = element_rect(fill=background_color),
-        plot.title=element_text(hjust=.5, size=25, colour = font_color))
+        plot.title=element_text(hjust=.5, size=title_size, colour = font_color))
 ```
+
+### Transparency
 
 On the figure we can observe that the most common colors used are different shades of grey. A characteristic tone of yellow, blue and red are also present in the treemap.
 
-```{r Btransparency, fig.height=5.9, fig.width=5.5, fig.align='center'}
+```{r Btransparency, fig.height=5.83, fig.width=5.5}
 trans_count <- colors %>% group_by(is_trans) %>% summarise(count = n()) %>% 
   mutate(
     proportions = paste(round(count/sum(count),2)*100, "%", sep=''),
@@ -407,16 +442,13 @@ trans_count %>%
   ggtitle("Proportion of transparent colors") +
   theme_void() +
   geom_text(nudge_y = c(-45,-19), nudge_x = c(0.0025,0.2), size=9, color=font_color, fontface="bold") +
-  theme(plot.title = element_text(hjust=0.3, vjust=0.1, color=font_color, size=25),
+  theme(plot.title = element_text(hjust=0.3, vjust=-1.5, color=font_color, size=title_size),
         plot.background = element_rect(fill=background_color),
         axis.ticks.length = unit(0, "pt"),
         legend.position = "none") +
-  guides(fill=guide_legend(title="Is transparent  ")) + 
   annotate(geom="text", x=1.9, y=20, label="Transparent", size=7, color=font_color) + 
   annotate(geom="text", x=1.9, y=125, label="Non-transparent", size=7, color=font_color)
 ```
-
-
 
 ```{r logo, out.width = "700px", echo=F, fig.align='left'}
 knitr::include_graphics("imgs/PP_logotyp_black.png")
