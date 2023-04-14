@@ -36,7 +36,9 @@ knitr::opts_chunk$set(
 
 ------------------------------------------------------------------------
 
+<div style="text-align: justify"> 
   The following analysis is based on a publicly available Rebrickable database containing information about LEGO parts, colors, types of parts, as well as sets and themes, containing the year of production for each set, and much more. The goal of the analysis is to visualize and draw conclusions when it comes to relations between the aforementioned attributes with a special emphasis on the time data analysis as a means of understanding how the previous changes, trends and relationships between available attributes, influenced future company decisions and as such may at some point allow drawing further conclusions in the future. Lastly, emphasis has also been placed on analyzing unique and rare LEGO parts to understand what themes may be particularly likely to contain them and in effect what the collectors should set their sights on.
+</div>
 
 ------------------------------------------------------------------------
 
@@ -45,11 +47,6 @@ knitr::opts_chunk$set(
 ------------------------------------------------------------------------
 
 ```{r libraries, error=F, message=F, warning=F, results='hide'}
-#install.packages('R.utils', repos = "http://cran.us.r-project.org")
-#install.packages("treemapify", repos = "http://cran.us.r-project.org")
-#install.packages("ploty", repos = "http://cran.us.r-project.org")
-#install.packages("DT", repos = "http://cran.us.r-project.org")
-#install.packages("ggridges", repos = "http://cran.us.r-project.org")
 library(data.table)
 library(tidyr)
 library(ggplot2)
@@ -679,6 +676,7 @@ This simple piechart represents the proportion of transparent and non-transparen
 
 ------------------------------------------------------------------------
 
+<div style="text-align: justify"> 
   In this data analysis, multiple different aspects of the data have been considered, particularly pertaining to how the LEGO landscape has changed through sets and themes. It has been noted that throughout the years, many themes have been introduced, and in some aspects, the popularity of those themes, as reflected through the number of produced sets, coincided with real-world events that influenced the popularity of brands the themes were based on. Additionally, when viewing time-series data as in this analysis, real-world events can be seen reflected in the data. For example, the introduction of "Modulex bricks" had a significant impact on the number of produced unique LEGO parts that year. Furthermore, the continued, exponential increase in the number of produced sets may reflect the continued growth of the LEGO company, at least theoretically.
 
   Secondly, the relation between themes and unique parts was explored, giving LEGO collectors a possible view of which themes may be worth investing in to acquire the most unique LEGO collection. Lastly, the relation between colors present in LEGO parts was also visualized to show what sorts of color arrangements a potential buyer may expect from the average LEGO set.
@@ -686,6 +684,7 @@ This simple piechart represents the proportion of transparent and non-transparen
   The limiting factor and things worth considering in future analyses may include data pertaining to the sales of LEGO sets, with the price of the individual set as well as sales of individual sets being included. Such data would allow the analysis to further dive into the relations between past popularity of sets/themes, real-world events, and future decisions regarding sets and themes production. However, due to the sensitivity of such data, it is understandable why such data would not be published.
 
   In conclusion, the analysis allowed the readers to gain insight into the past trends present in LEGO, as well as visualize some interesting relations between sets and themes, unique parts and themes, as well as understand the most common colors used when creating LEGO parts.
+</div>
 
 ```{r logo, out.width = "700px", echo=F, fig.align='left'}
 knitr::include_graphics("imgs/PP_logotyp_black.png")
