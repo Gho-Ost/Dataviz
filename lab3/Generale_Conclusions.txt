@@ -1,0 +1,20 @@
+  In this data analysis, multiple different aspects of the data have been considered, particularly pertaining to how the 
+Lego landscape has changed through sets and themes.It has been noted that throughout the years, many themes have been introduced,
+and in some aspects, the popularity of those themes, as reflected through the number of produced sets, coincided with real-world events that influenced
+the popularity of brands the themes were based on. Additionally, when viewing time-series data as in this analysis, real-world events can be seen reflected in the data.
+For example, the introduction of "Modulex bricks" had a significant impact on the number of produced unique Lego parts that year.
+Furthermore, the continued, exponential increase in the number of produced sets may reflect the continued growth of the Lego company, at least theoretically.
+
+  Secondly, the relation between themes and unique parts was explored, giving Lego collectors a possible view of which themes may be worth 
+investing in to acquire the most unique Lego collection. Lastly, the relation between colors present in Lego parts was also visualized to show
+what sorts of color arrangements a potential buyer may expect from the average Lego set.
+
+  The limiting factor and things worth considering in future analyses may include data pertaining to the sales of Lego sets,
+with the price of the individual set as well as sales of individual sets being included. 
+Such data would allow the analysis to further dive into the relations between past popularity of sets/themes,
+real-world events, and future decisions regarding sets and themes production. However, due to the sensitivity of such data,
+it is understandable why such data would not be published.
+
+  In conclusion, the analysis allowed the readers to gain insight into the past trends present in Lego,
+as well as visualize some interesting relations between sets and themes, unique parts and themes,
+as well as understand the most common colors used when creating Lego parts.
