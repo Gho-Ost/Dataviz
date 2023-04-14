@@ -1,0 +1,74 @@
+/* Set the background color to a dark shade of gray */
+body {
+  background-color: #1d1d1d;
+  color: #f0f0f0;
+  font-family: Arial, sans-serif;
+  font-size: 16px;
+  max-width: 930px;
+  margin: 0 auto;
+}
+
+/* Set the font color for headings */
+h1, h2, h3, h4, h5, h6 {
+  color: #f0f0f0;
+}
+
+/* Set the link color */
+a {
+  color: #ff9900;
+}
+
+/* Set the color for inline code */
+code {
+  color: #ff9900;
+  background-color: #444444;
+  padding: 0.1em 0.3em;
+  font-size: 0.9em;
+}
+
+/* Set the color for code blocks */
+pre {
+  color: #FFFFFF;
+  background-color: #1f1f1f;
+  padding: 0.5em;
+  font-size: 0.9em;
+  overflow-x: auto;
+  border-radius: 5px;
+  border: 1px solid #888888;
+}
+
+pre code {
+  background-color: #1f1f1f;
+  overflow-x: auto;
+}
+
+/* Set the color for blockquotes */
+blockquote {
+  border-left: 3px solid #ff9900;
+  margin: 0;
+  padding: 0.5em;
+  background-color: #444444;
+  color: #f0f0f0;
+}
+
+/* Set the color for tables */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 1em;
+  border: 1px solid #444444;
+}
+
+table th {
+  background-color: #444444;
+  color: #f0f0f0;
+  border: 1px solid #444444;
+  padding: 0.5em;
+  text-align: left;
+}
+
+table td {
+  border: 1px solid #444444;
+  padding: 0.5em;
+}
+
