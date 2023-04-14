@@ -1,0 +1,29 @@
+Cumulative Sum of Sets for Chosen Themes:
+Graph Explanation:
+The plot shows the cumulative sum for the number of sets for selected themes over the years.
+The chosen themes were based on their popularity, which was determined by the total number of produced sets.
+For this visualization, the top 5 themes with the highest number of produced sets were chosen.
+
+Graph Description/Intermediate conclusions:
+As seen on the plot, the "Books" theme is the oldest among the presented themes and experienced slow growth until around the year 2010 when there was a sudden increase.
+Many of the presented themes experienced quick growth in the 2000s. "Technic" had the most sets created for it until relatively recently when the "Star Wars" theme's 
+explosive growth surpassed it. This illustrates the importance of the "Star Wars" brand for Lego and how collaborating with a well-known brand can influence 
+the company's future.
+
+Number of Produced Star Wars Sets:
+Prelude:
+The previous visualization has shown the significance of the "Star Wars" brand and theme for the Lego company.
+It would now be beneficial to take a closer and more thorough look at the growth of the number of sets for the "Star Wars" theme.
+
+Graph Explanation:
+The plot displays the number of sets produced in a given year for the "Star Wars" theme. 
+Additional dotted, horizontal lines were included to show the release dates for both the main prequel trilogy and the sequel trilogy.
+The original trilogy's release dates were not shown since they predate the release of any "Star Wars" themed Lego sets.
+
+Graph Description/Intermediate Conclusions:
+Regarding the general trend, it can be seen that the number of produced sets increased considerably over the years. 
+However, recently, the number of produced "Star Wars" themed sets has been declining steeply. Interestingly, 3 out of the 6 shown movie releases 
+(Attack of the Clones, Revenge of the Sith, The Force Awakens) coincided with local maxima for the number of sets produced. 
+Additionally, the release of "Phantom Menace" coincided with the start of collaboration between Lego and Star Wars in producing sets,
+with a significant spike visible within a year of the release. However, the release of "Rise of Skywalker" did not cause a significant 
+increase in the number of produced themed sets, neither before nor after the premiere.
