@@ -1,0 +1,30 @@
+Average Number of Parts per Set per Year:
+Graph Explanation:
+The plot shows the average number of parts in a set for each given year.
+
+Graph Description/Intermediate Conclusions:
+The average number of parts in a set has increased significantly throughout the years,
+however, there have been significant spikes and fluctuations, as can be seen in the graph.
+For example, the average number of parts in a Lego set was much higher in the year 1960 than in the years before or after.
+
+Average and Maximum Number of Parts in Theme for Chosen Themes (for highest avg):
+Graph Explanation:
+The horizontal bar chart shows the average and maximum number of parts in a set for a given theme.
+The themes on the plot are ordered according to decreasing value of average number of parts for a set of that theme.
+The chosen themes in this case refer to themes with the highest average number of parts per set.
+
+Average Number of Parts in Themes for Chosen Themes (for highest avg):
+Graph Explanation:
+The horizontal bar chart shows the average number of parts for the 20 themes with the highest average number of parts in a set.
+The themes on the plot are ordered according to decreasing value of the average number of parts for a set of that theme.
+
+Average and Maximum Number of Parts in Theme for Chosen Themes (for highest max):
+Graph Explanation:
+The horizontal bar chart shows the average and maximum number of parts in a set for a given theme.
+The themes on the plot are ordered according to decreasing value of the maximum number of parts for a set of that theme.
+The chosen themes in this case refer to themes with the highest maximum number of parts per set.
+
+Average Number of Parts in Themes for Chosen Themes (for highest max):
+Graph Explanation:
+The horizontal bar chart shows the average number of parts for the 20 themes with the highest maximum number of parts in a set.
+The themes on the plot are ordered according to decreasing value of the average number of parts for a set of that theme.
