@@ -1,33 +1,24 @@
 20 Themes with the Highest Number of Unique Parts:
-Graph Explonation:
-The horizontal barchart shows the names of 20 themes with the highest number of unique lego parts ordered according to the decreasing number of unique lego parts.
-Unique parts in this case are defined as all lego parts that appear only in one set.
+Graph Explanation:
+The horizontal bar chart shows the names of 20 themes with the highest number of unique Lego parts ordered according to the decreasing number of unique Lego parts. Unique parts, in this case, are defined as all Lego parts that appear only in one set.
 
-Graph Description/Intermidiate Conclusions:
-Themes with highest number of unique parts include, among many others, themes like: "Duplo and Explore", "Ninjago" and "Star Wars". It appears that themes that could be
-considered to be visually "unique" are also more likely be chosen as a set with highest numebr of unique parts. Some themes may also end up gaining advantage in this
-category thanks to them having more sets overall, like the "Star Wars" theme.
+Graph Description/Intermediate Conclusions:
+Themes with the highest number of unique parts include themes like "Duplo and Explore," "Ninjago," and "Star Wars," among many others. It appears that themes that could be considered visually "unique" are also more likely to be chosen as a set with the highest number of unique parts. Some themes may also end up gaining an advantage in this category thanks to having more sets overall, like the "Star Wars" theme.
 
 Number of Unique Lego Blocks per Year:
-Graph Explonation:
-The plot shows the number of unqiue lego blocks produced in a given year. Unique parts in this case are defined as all lego parts that appear only in one set.
+Graph Explanation:
+The plot shows the number of unique Lego blocks produced in a given year. Unique parts, in this case, are defined as all Lego parts that appear only in one set.
 
-Graph Description/Intermidiate Conclusions:
-The number of unique lego blocks appears to have increased throughout the years, which makes sense, as with time more sets are produced in a year by the company. As such,
-more unique blocks may also be produced. However, the growth is not smooth, and there appear to be significant spikes thoughout the years in the number of unique blocks
-produced.
+Graph Description/Intermediate Conclusions:
+The number of unique Lego blocks appears to have increased throughout the years, which makes sense, as more sets are produced in a year by the company. As such, more unique blocks may also be produced. However, the growth is not smooth, and there appear to be significant spikes throughout the years in the number of unique blocks produced.
 
 Cumulative Sum of Number of Unique Lego Blocks per Year:
-Graph Explonation:
-The plot shows the cumulative sum of unqiue lego blocks produced in a given year. Unique parts in this case are defined as all lego parts that appear only in one set.
+Graph Explanation:
+The plot shows the cumulative sum of unique Lego blocks produced in a given year. Unique parts, in this case, are defined as all Lego parts that appear only in one set.
 
-Graph Description/Intermidiate Conclusions:
-The graph shows how the total number of unique blocks increased through the years. Intereestingly enough, the growth appears to be about exponential in nature although
-not completly smooth, with significant increases in a given year being noticiable on the plot's line.
+Graph Description/Intermediate Conclusions:
+The graph shows how the total number of unique blocks increased over the years. Interestingly enough, the growth appears to be about exponential in nature, although not completely smooth, with significant increases in a given year being noticeable on the plot's line.
 
-Number of Rare Lego Parts vs Average Number of Parts for a Theme
-Graph Explonation:
-This interactive scatterplot shows the number of rare lego patts on the y-axis and the average number of parts in a set for a given theme. Meaning that each point is
-a theme with a given number of rare lego parts and given average number of parts for a set. The rare lego parts on this plot refare to lego parts/blocks that 
-appear in only one of the sets accross all themes. Using this plot, collectors can see which themes are most worht buying when it comes to getting the highest
-number of unique parts among non-unique lego parts.
+Number of Rare Lego Parts vs Average Number of Parts for a Theme:
+Graph Explanation:
+This interactive scatter plot shows the number of rare Lego parts on the y-axis and the average number of parts in a set for a given theme. Each point is a theme with a given number of rare Lego parts and a given average number of parts for a set. The rare Lego parts, in this plot, refer to Lego parts/blocks that appear in only one of the sets across all themes. Using this plot, collectors can see which themes are most worth buying when it comes to getting the highest number of unique parts among non-unique Lego parts.
