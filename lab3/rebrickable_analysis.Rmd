@@ -12,18 +12,24 @@ output:
 ```{=html}
 <style>
 .vscroll-plot {
-    width: 800px;
+    width: 900px;
     height: 400px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
 </style>
 ```
+
 ```{r monogram, out.width = "100px", echo=F, fig.align='left'}
 knitr::include_graphics("imgs/PP_monogram_kontur.png")
 ```
 
-Prerequisite libraries:
+```{r echo, out.width = "100px", echo=F, fig.align='left'}
+# Set echo to false, figure width to approximately the width of code chunks
+knitr::opts_chunk$set(
+  echo = F, fig.width = 9.67
+)
+```
 
 ```{r libraries, error=F, message=F, warning=F, results='hide'}
 #install.packages('R.utils', repos = "http://cran.us.r-project.org")
@@ -57,20 +63,20 @@ label_size <- 16
 tick_size <- 12
 grid_size <- 0.5
 
-code_chunk_length <- 9.67
-
 orange <- "#FF7E67"
 coral <- "#FFFFC0"
-teal <- "#40C0C0"
+teal <- "#62e2e2"
+
+selected_years <- seq(1940, 2025, by=10)
 ```
 
 ------------------------------------------------------------------------
 
-## Themes
+# Themes
 
 ------------------------------------------------------------------------
 
-In this section we will explore data regarding ***themes***.
+In the first section we will explore data regarding ***themes***.
 
 ```{r Bridgepreprocessing}
 parents <- themes %>% filter(is.na(parent_id)) %>% group_by(id, name)
@@ -96,26 +102,39 @@ set_themes_children <- set_themes_children %>%
   mutate(parent_name = ifelse(parent_name=="parent", theme_name, parent_name))
 ```
 
+### Distribution of Themed Set Releases
+
 ::: vscroll-plot
-```{r Bridge, fig.height=40, echo=F}
-# make better vertical lines
+```{r Bridge, fig.height=40, fig.width=9}
+ridge_years <- seq(1940, 2020, by=20)
+
 set_themes_children %>% 
   ggplot(aes(x=year, y=as.character(parent_name), fill=as.character(parent_name))) +
-  geom_density_ridges(alpha=0.6, bandwidth=1.7) +
+  geom_density_ridges(alpha=0.6, bandwidth=0.8, color="#FFFFFF") +
   theme_ridges() +
-  ylab(label = "theme") +
-  ggtitle("Distribution of themed set releases in years 1949-2023") +
-  theme(legend.position = "none", plot.title = element_text(hjust=2, size=20),
-        axis.title.y = element_blank()) 
+  scale_x_continuous(breaks = ridge_years, limits = c(1940, 2025)) +
+  ggtitle("Distribution of Themed Set Releases in Years 1949-2023") +
+  theme(legend.position = "none", 
+        plot.background = element_rect(fill=background_color),
+        plot.title = element_text(size=title_size, colour = font_color, hjust=1.7),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.background = element_rect(fill=background_color)) +
+  annotate("text", x = ridge_years+1.5, y = 141.75, label = ridge_years, angle = 90, size=4,
+           color="white")
 ```
 :::
 
-Top 5 cumsum
 
-```{r Mtop5themes, warning=F}
+
+### Cumulative Sum of Sets for Chosen Themes
+
+```{r Mtop5themes, warning=F, message=F}
 merged_df <- merge(sets, themes, by.x = "theme_id", by.y = "id", all.x = TRUE)
 
-selected_years <- c(1950, 1960, 1970, 1980, 1990, 2000, 2010, 2020)
+star_years <- seq(1950, 2020, by=10)
 
 popular_themes <- merged_df %>%
   count(name.y, sort = TRUE) %>%
@@ -133,42 +152,85 @@ theme_year_counts_cumsum <- theme_year_counts %>%
   group_by(name.y) %>%
   mutate(cum_sum = cumsum(num_sets))
 
+#Plot 1->CumSum of Sets for Chosen Themes
 ggplot(data = theme_year_counts_cumsum, aes(x = year, y = cum_sum, color = name.y)) +
   geom_line(size = 1) +
-  scale_x_continuous(breaks = selected_years) +
+  scale_x_continuous(breaks = star_years) +
+  scale_color_manual(values=c("#FF4040", "#00FF40", "#FFFF00", "#FF8000", "#00FFFF")) +
   labs(x = "Year", y = "Number of Sets", color = "Theme") +
-  ggtitle("Cumulative Sum of Sets for Chosen Themes")
+  ggtitle("Cumulative Sum of Sets for Chosen Themes") +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust=0.4),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, color = font_color),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill=background_color),
+        legend.background = element_rect(fill=background_color),
+        legend.text = element_text(size=tick_size, color = tick_color),
+        legend.title = element_text(size=label_size, color = font_color),
+        legend.key = element_rect(fill=background_color))
 ```
 
-Star wars
+The plot shows the cumulative sum for the number of sets for selected themes over the years.
+The chosen themes were based on their popularity, which was determined by the total number of produced sets.
+For this visualization, the top 5 themes with the highest number of produced sets were chosen.
+
+As seen on the plot, the "Books" theme is the oldest among the presented themes and experienced slow growth until around the year 2010 when there was a sudden increase. 
+Many of the presented themes experienced quick growth in the 2000s. "Technic" had the most sets created for it until relatively recently when the "Star Wars" theme's explosive growth surpassed it. This illustrates the importance of the "Star Wars" brand for LEGO and how collaborating with a well-known brand can influence the company's future.
+
+### Number of Produced Star Wars Sets
 
 ```{r MStarWars}
 star_wars_counts <- theme_year_counts %>% filter(name.y == "Star Wars")
 film_releases=c(1999,2002,2005,2015,2017,2019)
-film_colors=c("red", "orange", "green", "blue", "purple", "brown")
+film_colors=c("#ff3333", "orange", "green", "#FF40FF", "pink", "yellow")
 film_labels=c("The Phantom Menace", "Attack of the Clones", "Revenge of the Sith",
               "The Force Awakens", "The Last Jedi", "The Rise of Skywalker")
 
 ggplot(data = star_wars_counts, aes(x = year, y = num_sets)) +
-  geom_line(size = 1) +
-  scale_x_continuous(breaks = selected_years) +
+  geom_line(size = 1, color=teal) +
+  scale_x_continuous(breaks = seq(1998, 2023, by=5)) +
   labs(x = "Year", y = "Number of Sets") +
   ggtitle("Number of Produced Star Wars Sets") +
   geom_vline(xintercept = film_releases, color = film_colors, linetype="dotted") +
   annotate("text", x = film_releases[1:3]+0.2, y = max(star_wars_counts$num_sets)*0.4, 
-           label = film_labels[1:3], color = film_colors[1:3], angle = 90, hjust = -0.2, size=3) +
+           label = film_labels[1:3], color = film_colors[1:3], angle = 90, hjust = -0.2, size=3.5) +
   annotate("text", x = film_releases[4:6]+0.2, y = 0, label = film_labels[4:6], 
-           color = film_colors[4:6], angle = 90, hjust = -0.2, size=3) +
-  theme(legend.position = "none")
+           color = film_colors[4:6], angle = 90, hjust = c(-0.4,-0.6,-0.4), size=3.5) +
+  theme(legend.position = "none",
+        plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust=0.4),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, color = font_color),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill=background_color))
 ```
 
+The previous visualization has shown the significance of the "Star Wars" brand and theme for the LEGO company.
+It would now be beneficial to take a closer and more thorough look at the growth of the number of sets for the "Star Wars" theme.
+
+The plot displays the number of sets produced in a given year for the "Star Wars" theme. 
+Additional dotted, horizontal lines were included to show the release dates for both the main prequel trilogy and the sequel trilogy.
+The original trilogy's release dates were not shown since they predate the release of any "Star Wars" themed LEGO sets.
+
+Regarding the general trend, it can be seen that the number of produced sets increased considerably over the years. 
+However, recently, the number of produced "Star Wars" themed sets has been declining steeply. Interestingly, 3 out of the 6 shown movie releases 
+(Attack of the Clones, Revenge of the Sith, The Force Awakens) coincided with local maxima for the number of sets produced. 
+Additionally, the release of "Phantom Menace" coincided with the start of collaboration between LEGO and Star Wars in producing sets,
+with a significant spike visible within a year of the release. However, the release of "Rise of Skywalker" did not cause a significant 
+increase in the number of produced themed sets, neither before nor after the premiere.
+
 ------------------------------------------------------------------------
 
-### Themes ~ sets
+## Themes ~ sets
 
 ------------------------------------------------------------------------
 
-Table of parent themes
+### Table of parent themes
 
 ```{r Bdatable}
 set_themes <- sets %>% 
@@ -197,9 +259,11 @@ prettyTable(grouped_theme_colors)
 
 ------------------------------------------------------------------------
 
-## Parts
+# Parts
 
 ------------------------------------------------------------------------
+
+Data
 
 ```{r partsdata}
 merged_df <- merge(sets, themes, by.x = "theme_id", by.y = "id", all.x = TRUE)
@@ -215,22 +279,36 @@ parts_count <- merged_df_inventory_parts_final %>% count(part_num, name = "count
 merged_counts <- merge(merged_df_inventory_parts_final, parts_count, by = "part_num",   all.x=T)
 ```
 
-Unique parts in years
+### Number of Unique LEGO Blocks per Year
 
 ```{r Muniqueparts}
 result <- merged_counts %>%
   filter(count == 1)
-result<-result %>%
+result <- result %>%
   count(year)
-result<-na.omit(result)
+result <- na.omit(result)
 
 ggplot(result, aes(x = year, y = n)) +
-  geom_line() +
-  labs(x = "Year", y = "Number of Unique Lego Parts") +
-  ggtitle("Number of Unique Lego Blocks per Year")
+  geom_line(color=teal, size=1) +
+  labs(x = "Year", y = "Number of Unique LEGO Parts") +
+  ggtitle("Number of Unique LEGO Blocks per Year") +
+  scale_x_continuous(breaks=selected_years) +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust=0.4),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, color = font_color),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill=background_color)) + 
+  annotate(geom="text", x=1963, y=930, label="Introduction of Modulex bricks", size=4, color=font_color)
 ```
 
-Unique cumsum
+The plot shows the number of unique LEGO blocks produced in a given year. Unique parts in this case are defined as all LEGO parts that appear only in one set.
+
+The number of unique LEGO blocks appears to have increased throughout the years, which makes sense, as with time more sets are produced in a year by the company. As such, more unique blocks may also be produced. However, the growth is not smooth, and there appear to be significant spikes throughout the years in the number of unique blocks produced.
+
+### Cumulative Sum of Rare LEGO Parts through Years
 
 ```{r Muniquecumsum}
 result_cumsum <- result %>%
@@ -238,12 +316,25 @@ result_cumsum <- result %>%
   mutate(n_cumsum = cumsum(n))
 
 ggplot(result_cumsum, aes(x = year, y = n_cumsum)) +
-  geom_line() +
-  labs(x = "Year", y = "Number of Rare Lego Parts") +
-  ggtitle("Cumulative Sum of Rare Lego Parts through Years")
+  geom_line(color=teal, size=1) +
+  labs(x = "Year", y = "Number of Rare LEGO Parts") +
+  ggtitle("Cumulative Sum of Rare LEGO Parts through Years") +
+  scale_x_continuous(breaks=selected_years) +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust=0.4),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, color = font_color),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.grid.minor = element_blank(),
+        panel.background = element_rect(fill=background_color))
 ```
 
-Unique vs average in a theme
+The plot shows the cumulative sum of unique LEGO blocks produced in a given year. Unique parts in this case are defined as all LEGO parts that appear only in one set.
+
+The graph shows how the total number of unique blocks increased through the years. Interestingly enough, the growth appears to be about exponential in nature although not completely smooth, with significant increases in a given year being noticeable on the plot's line.
+
+### Number of Rare LEGO Parts vs Average Number of Parts for a Theme
 
 ```{r Muniquevsaverage, warning=F}
 result <- merged_counts
@@ -252,20 +343,27 @@ theme_counts <- result %>%
   summarize(num_parts = mean(num_parts), count = sum(count)) %>%
   arrange(desc(count))
 
-theme_counts<-head(arrange(theme_counts,desc(count)),100)
+theme_counts <- head(arrange(theme_counts,desc(count)),100)
 theme_counts <- theme_counts %>% rename('Average Number of Parts' = num_parts) %>%
-  rename('Number of Rare Lego Parts'=count)
+  rename('Number of Rare LEGO Parts'=count)
 
 ggplotly(ggplot(theme_counts, aes(x = theme_counts$'Average Number of Parts',
-                                  y = theme_counts$'Number of Rare Lego Parts',
+                                  y = theme_counts$'Number of Rare LEGO Parts',
                                   text = name.y)) +
-           geom_point() +
-           labs(x = "Average Number of Parts", y = "Number of Rare Lego Parts") +
-           ggtitle("Number of Rare Lego Parts vs Average Number of Parts for a Theme"))
-
+           geom_point(color=teal) +
+           labs(x = "Average Number of Parts", y = "Number of Rare LEGO Parts") +
+           ggtitle("Number of Rare LEGO Parts vs Average Number of Parts for a Theme") +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust = 1),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, colour = font_color),
+        axis.text = element_text(size=tick_size, color = tick_color),
+        panel.background = element_rect(fill=background_color)))
 ```
 
-Average parts per set
+This interactive scatterplot shows the number of rare LEGO parts on the y-axis and the average number of parts in a set for a given theme. Meaning that each point is a theme with a given number of rare LEGO parts and given average number of parts for a set. The rare LEGO parts on this plot refer to LEGO parts/blocks that appear in only one of the sets across all themes. Using this plot, collectors can see which themes are most worth buying when it comes to getting the highest number of unique parts among non-unique LEGO parts.
+
+### Average Number of Parts per Set
 
 ```{r Mavpartset}
 merged_df <- merge(sets, themes, by.x = "theme_id", by.y = "id", all.x = TRUE)
@@ -275,20 +373,36 @@ avg_parts_per_year <- merged_df %>%
   summarize(avg_parts = mean(num_parts))
 
 ggplot(data = avg_parts_per_year, aes(x = year, y = avg_parts)) +
-  geom_line(size = 1) +
+  geom_line(size = 1, color=teal) +
   labs(x = "Year", y = "Average Number of Parts per Set") +
-  ggtitle("Average Number of Parts per Set per Year")
+  ggtitle("Average Number of Parts per Set per Year") +
+  scale_x_continuous(breaks=selected_years) +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust = 0.5),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, colour = font_color),
+        axis.text = element_text(size=tick_size, color = tick_color),
+        panel.background = element_rect(fill=background_color),
+        panel.grid = element_line(color="#CCCCCC"),
+        panel.grid.minor = element_blank()) + 
+  annotate(geom="text", x=1960, y=190, label="Kindergarten LEGO Set", size=4, color=font_color)
 ```
 
+The plot shows the average number of parts in a set for each given year.
+
+The average number of parts in a set has increased significantly throughout the years,
+however, there have been significant spikes and fluctuations, as can be seen in the graph.
+For example, the average number of parts in a LEGO set was much higher in the year 1960 than in the years before or after.
+
 ------------------------------------------------------------------------
 
-### Parts ~ themes
+## Parts ~ themes
 
 ------------------------------------------------------------------------
 
-20 themes with the highest amount of unique lego parts
+### Themes with the Highest Amount of Unique LEGO Parts
 
-```{r Mpartthemes, fig.width=code_chunk_length}
+```{r Mpartthemes}
 result_2 <- merged_counts %>%
   filter(count == 1)
 result_2<-result_2 %>%
@@ -303,7 +417,7 @@ ggplot(result_2, aes(x = n, y = reorder(name.y, n))) +
   geom_col(fill = coral) +
   labs(title = "20 Themes with the Highest Amount of Unique LEGO Parts",
        x = "Number of Unique Parts",
-       y = "Theme")+
+       y = "Theme") +
   theme(plot.background = element_rect(fill=background_color),
         plot.title=element_text(size=title_size, colour = font_color, hjust = 4),
         axis.title.x = element_text(size=label_size, colour = font_color, hjust=0.2),
@@ -313,9 +427,16 @@ ggplot(result_2, aes(x = n, y = reorder(name.y, n))) +
         panel.background = element_rect(fill=background_color))
 ```
 
-Average and maximum parts per theme
+Graph Explanation:
+The horizontal barchart shows the names of 20 themes with the highest number of unique LEGO parts ordered according to the decreasing number of unique LEGO parts.
+Unique parts in this case are defined as all LEGO parts that appear only in one set.
 
-```{r Mavmaxparttheme, fig.width=code_chunk_length}
+Graph Description/Intermediate Conclusions:
+Themes with highest number of unique parts include, among many others, themes like: "Duplo and Explore", "Ninjago" and "Star Wars". It appears that themes that could be considered to be visually "unique" are also more likely be chosen as a set with highest number of unique parts. Some themes may also end up gaining advantage in this category thanks to them having more sets overall, like the "Star Wars" theme.
+
+### Average and Maximum Number of Parts
+
+```{r Mavmaxparttheme}
 theme_part_counts <- merged_df %>%
   group_by(name.y) %>%
   summarize(avg_parts = mean(num_parts))
@@ -338,7 +459,7 @@ ggplot(top_20_avg_parts, aes(x = reorder(name.y, avg_parts), y = avg_parts)) +
   labs(x = "Theme", y = "Average Number of Parts") +
   geom_point(aes(reorder(name.y, avg_parts),y=max_parts), color=background_color, 
              fill= coral, shape=21, size=3, stroke=1.5) +
-  ggtitle("Average and Maximum Number of Parts in Selected Themes") +
+  ggtitle("Average and Maximum Number of Parts for Chosen Themes") +
   theme(plot.background = element_rect(fill=background_color),
         plot.title=element_text(size=title_size, colour = font_color, hjust = 4),
         axis.title.x = element_text(size=label_size, colour = font_color, hjust=0.2),
@@ -348,9 +469,31 @@ ggplot(top_20_avg_parts, aes(x = reorder(name.y, avg_parts), y = avg_parts)) +
         panel.background = element_rect(fill=background_color))
 ```
 
+The horizontal bar chart shows the average and maximum number of parts in a set for a given theme.
+The themes on the plot are ordered according to decreasing value of average number of parts for a set of that theme.
+The chosen themes in this case refer to themes with the highest average number of parts per set.
+
+
+```{r Mavmaxpartthemenodots}
+ggplot(top_20_avg_parts, aes(x = reorder(name.y, avg_parts), y = avg_parts)) +
+  geom_bar(stat = "identity", fill=coral) +
+  coord_flip() +
+  labs(x = "Theme", y = "Average Number of Parts in a Set") +
+  ggtitle("Average Number of Parts in Themes for Chosen Themes") +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust = -8),
+        axis.title.x = element_text(size=label_size, colour = font_color, hjust=0.2),
+        axis.title.y = element_text(size=label_size, colour = font_color),
+        axis.text = element_text(size=tick_size, color = tick_color),
+        panel.background = element_rect(fill=background_color))
+```
+
+The horizontal bar chart shows the average number of parts for the 20 themes with the highest average number of parts in a set.
+The themes on the plot are ordered according to decreasing value of the average number of parts for a set of that theme.
+
 ------------------------------------------------------------------------
 
-## Sets
+# Sets
 
 ------------------------------------------------------------------------
 
@@ -369,14 +512,14 @@ exp_model <- lm(log(num_sets_per_year_df_new$num_sets)~ as.integer(num_sets_per_
 
 ggplot(num_sets_per_year_df_new, aes(x = year, y = num_sets, group=1)) +
   geom_line(color = teal, size=1) +
-  geom_smooth(method = "lm", formula = y ~ exp(coef(exp_model)[1] + coef(exp_model)[2] * x), 
-              se = FALSE, color=orange) +
+  geom_line(stat="smooth", method = "lm", formula = y ~ exp(coef(exp_model)[1] + coef(exp_model)[2] * x), 
+              se = FALSE, color=orange, alpha=0.75, size=1) +
   scale_x_discrete(breaks = selected_years) +
   xlab("Year") +
   ylab("Number of Sets") +
   ggtitle("Number of Sets per Year") +
   theme(plot.background = element_rect(fill=background_color),
-        plot.title=element_text(size=title_size, colour = font_color),
+        plot.title=element_text(size=title_size, colour = font_color, hjust=0.4),
         axis.title.x = element_text(size=label_size, colour = font_color),
         axis.title.y = element_text(size=label_size, color = font_color),
         axis.text.x = element_text(size=tick_size, color = tick_color),
@@ -384,9 +527,17 @@ ggplot(num_sets_per_year_df_new, aes(x = year, y = num_sets, group=1)) +
         panel.background = element_rect(fill=background_color))
 ```
 
+The plot shows the total number of sets produced across all themes for each year. 
+An exponential regression line has been added to show the observed trend of the growth of the number of produced sets in a year. 
+The plot shows only the data up to 2022, as the information about the number of produced sets for 2023 is incomplete and could influence the shape of the regression line.
+
+The increase appears to be exponential in nature, with the drop at the end caused by the fact that the data for 2023 only includes sets produced so far into the year. 
+It's likely that many more sets will still be produced until the end of the year. 
+The exponential regression line predicts further growth in the number of produced sets for the year 2023.
+
 ------------------------------------------------------------------------
 
-## Colors
+# Colors
 
 ------------------------------------------------------------------------
 
@@ -412,21 +563,21 @@ color_sums <- color_sums %>% mutate(
 )
 ```
 
-```{r Btopncolors, fig.width=code_chunk_length}
+```{r Btopncolors}
 top_colors <- color_sums %>% arrange(sum) %>% tail(top_n) %>% mutate(order = seq.int(top_n))
 
 top_colors %>% ggplot(aes(area=sum, fill=factor(order), label=rgb)) + 
   geom_treemap() +
   geom_treemap_text(min.size = 8, size=20, color=c(rep("white", nrow(top_colors)-3), 1, rep("white", 2))) +
   scale_fill_manual(values=rgb(top_colors$r, top_colors$g, top_colors$b, maxColorValue=255)) +
-  ggtitle("Most frequent colors") +
+  ggtitle("Most Frequent Colors of Parts") +
   theme(legend.position="none", plot.background = element_rect(fill=background_color),
         plot.title=element_text(hjust=.5, size=title_size, colour = font_color))
 ```
 
-### Transparency
-
 On the figure we can observe that the most common colors used are different shades of grey. A characteristic tone of yellow, blue and red are also present in the treemap.
+
+### Proportion of transparent colors
 
 ```{r Btransparency, fig.height=5.83, fig.width=5.5}
 trans_count <- colors %>% group_by(is_trans) %>% summarise(count = n()) %>% 
@@ -439,7 +590,7 @@ trans_count %>%
   ggplot(aes(x="", y=count, fill=is_transparent, label=proportions)) + 
   geom_bar(stat="identity", width=1) +
   coord_polar("y", start = 0) + 
-  ggtitle("Proportion of transparent colors") +
+  ggtitle("Proportion of Transparent Colors") +
   theme_void() +
   geom_text(nudge_y = c(-45,-19), nudge_x = c(0.0025,0.2), size=9, color=font_color, fontface="bold") +
   theme(plot.title = element_text(hjust=0.3, vjust=-1.5, color=font_color, size=title_size),
