@@ -3,6 +3,9 @@ Graph Explanation:
 The horizontal bar chart shows the names of 20 themes with the highest number of unique Lego parts ordered 
 according to the decreasing number of unique Lego parts. Unique parts, 
 in this case, are defined as all Lego parts that appear only in one set.
+In the procession of creation of this graph the "Database Sets" theme was
+deleted due to the assumption that it is a 'catch-all-term' and not
+an official lego theme and as such including it in the analysis would be useless.
 
 Graph Description/Intermediate Conclusions:
 Themes with the highest number of unique parts include themes like "Duplo and Explore," "Ninjago," 
