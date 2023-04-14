@@ -1,0 +1,18 @@
+Number of Sets per Year (No regression line):
+Graph Explanation:
+The plot shows the total number of sets produced across all themes for each year.
+
+Graph Description/Intermediate Conclusions:
+The increase appears to be exponential in nature, with the drop at the end caused by the fact that the data for 2023 only includes sets produced so far into the year.
+It's likely that many more sets will still be produced until the end of the year.
+
+Number of Sets per Year (Regression line):
+Graph Explanation:
+The plot shows the total number of sets produced across all themes for each year. 
+An exponential regression line has been added to show the observed trend of the growth of the number of produced sets in a year. 
+The plot shows only the data up to 2022, as the information about the number of produced sets for 2023 is incomplete and could influence the shape of the regression line.
+
+Graph Description/Intermediate Conclusions:
+The increase appears to be exponential in nature, with the drop at the end caused by the fact that the data for 2023 only includes sets produced so far into the year.
+It's likely that many more sets will still be produced until the end of the year. 
+The exponential regression line predicts further growth in the number of produced sets for the year 2023.
