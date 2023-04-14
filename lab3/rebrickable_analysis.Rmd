@@ -13,7 +13,7 @@ output:
 <style>
 .vscroll-plot {
     width: 900px;
-    height: 400px;
+    height: 550px;
     overflow-y: scroll;
     overflow-x: hidden;
 }
@@ -27,13 +27,36 @@ knitr::include_graphics("imgs/PP_monogram_kontur.png")
 ```{r echo, out.width = "100px", echo=F, fig.align='left'}
 # Set echo to false, figure width to approximately the width of code chunks
 knitr::opts_chunk$set(
-  echo = F, fig.width = 9.67
+  warning=F, message=F, fig.width = 9.67
 )
 ```
+
+------------------------------------------------------------------------
+
+# Introduction
+
+------------------------------------------------------------------------
+
+  The following analysis is based on a publicly available Rebrickable database containing information about lego parts, colors, types of parts,
+as well as sets and themes, containing the year of production for each set, and much more. The goal of the analysis is to visualize and draw conclusions
+when it comes to relations between the aforementioned attributes with a special emphasis on the time data analysis as a means
+of understanding how the previous changes and trends when it comes to the relationship between available attributes,
+influenced future company decisions and as such may at some point allow drawing further conclusions in the future. 
+Lastly, emphasis has also been placed on analyzing unique and rare Lego parts to understand
+what themes may be particularly likely and in effect what the collectors should set their sights on.
+
+------------------------------------------------------------------------
+
+# Setup
+
+------------------------------------------------------------------------
 
 ```{r libraries, error=F, message=F, warning=F, results='hide'}
 #install.packages('R.utils', repos = "http://cran.us.r-project.org")
 #install.packages("treemapify", repos = "http://cran.us.r-project.org")
+#install.packages("ploty", repos = "http://cran.us.r-project.org")
+#install.packages("DT", repos = "http://cran.us.r-project.org")
+#install.packages("ggridges", repos = "http://cran.us.r-project.org")
 library(data.table)
 library(tidyr)
 library(ggplot2)
@@ -106,13 +129,13 @@ set_themes_children <- set_themes_children %>%
 
 ::: vscroll-plot
 ```{r Bridge, fig.height=40, fig.width=9}
-ridge_years <- seq(1940, 2020, by=20)
+ridge_years <- seq(1940, 2020, by=10)
 
 set_themes_children %>% 
   ggplot(aes(x=year, y=as.character(parent_name), fill=as.character(parent_name))) +
-  geom_density_ridges(alpha=0.6, bandwidth=0.8, color="#FFFFFF") +
+  geom_density_ridges(alpha=0.6, bandwidth=0.8, color="#CCCCCC") +
   theme_ridges() +
-  scale_x_continuous(breaks = ridge_years, limits = c(1940, 2025)) +
+  scale_x_continuous(breaks = ridge_years, limits = c(1945, 2025)) +
   ggtitle("Distribution of Themed Set Releases in Years 1949-2023") +
   theme(legend.position = "none", 
         plot.background = element_rect(fill=background_color),
@@ -121,13 +144,28 @@ set_themes_children %>%
         axis.title.y = element_blank(),
         axis.text.x = element_text(size=tick_size, color = tick_color),
         axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.grid.major.x = element_line(color = rgb(235, 235, 235, 100, maxColorValue = 255)),
         panel.background = element_rect(fill=background_color)) +
   annotate("text", x = ridge_years+1.5, y = 141.75, label = ridge_years, angle = 90, size=4,
-           color="white")
+           color="white") +
+  annotate("text", x = ridge_years+1.5, y = 120, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 100, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 80, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6)+
+  annotate("text", x = ridge_years+1.5, y = 60, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6)+
+  annotate("text", x = ridge_years+1.5, y = 40, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6)+
+  annotate("text", x = ridge_years+1.5, y = 20, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6)
 ```
 :::
 
+This density ridge plot shows the distribution of releases of LEGO themes over the years. For the analysis parent themes were chosen and the counts were summed together with themes that are their subordinates. The themes are alphabetically sorted from the bottom of the plot.
 
+The plot allows to approximate when the production of certain themes began and when it ended as well as when the peaks of popularity occurred. Some of the themes received only a couple of sets (such as The Powerpuff Girls) and as such their trends are not visible on the plot.
 
 ### Cumulative Sum of Sets for Chosen Themes
 
@@ -226,11 +264,11 @@ increase in the number of produced themed sets, neither before nor after the pre
 
 ------------------------------------------------------------------------
 
-## Themes ~ sets
+## Themes ~ colors
 
 ------------------------------------------------------------------------
 
-### Table of parent themes
+### Table of themes and colors
 
 ```{r Bdatable}
 set_themes <- sets %>% 
@@ -257,14 +295,17 @@ prettyTable <- function(table_df, round_columns_func=is.numeric, round_digits=0)
 prettyTable(grouped_theme_colors)
 ```
 
+The table allows for searching through colors used in parts of parent themes making it possible to discover which colors define the themes. The table can be copied, saved as csv, excel or pdf file or printed. It includes a search bar for looking up specific values, allows for ordering the columns and limiting the part count.
+
 ------------------------------------------------------------------------
 
 # Parts
 
 ------------------------------------------------------------------------
 
-Data
+This section is focused on the measurements of parts from the ***inventory_parts*** dataset.
 
+Data organization:
 ```{r partsdata}
 merged_df <- merge(sets, themes, by.x = "theme_id", by.y = "id", all.x = TRUE)
 merged_df_inventories <- merge(inventories, merged_df, by = "set_num", all.x = TRUE)
@@ -400,6 +441,8 @@ For example, the average number of parts in a LEGO set was much higher in the ye
 
 ------------------------------------------------------------------------
 
+A section devoted to plots relating data regarding parts and themes
+
 ### Themes with the Highest Amount of Unique LEGO Parts
 
 ```{r Mpartthemes}
@@ -497,6 +540,8 @@ The themes on the plot are ordered according to decreasing value of the average 
 
 ------------------------------------------------------------------------
 
+In this section, data regarding sets is presented.
+
 ### Number of sets over years
 
 ```{r Msetsyearregression}
@@ -549,8 +594,6 @@ In the next section we will explore the ***colors*** data.
 top_n <- 100
 ```
 
-Here are the ***top `r top_n`*** most frequent colors based on the ***inventory_parts*** table quantities:
-
 ```{r Btopnpreprocessing}
 color_id_sums <- inventory_parts %>% group_by(color_id) %>% summarise(sum = sum(quantity))
 
@@ -575,7 +618,9 @@ top_colors %>% ggplot(aes(area=sum, fill=factor(order), label=rgb)) +
         plot.title=element_text(hjust=.5, size=title_size, colour = font_color))
 ```
 
-On the figure we can observe that the most common colors used are different shades of grey. A characteristic tone of yellow, blue and red are also present in the treemap.
+This treemap is supposed to represent the proportions of a set amount (***`r top_n`***) of most popular colors based on parts in the inventory. Colors used in the treemap represent the actual colors of parts, their rgb values are annotated on each rectangle.
+
+On the figure we can observe that the most common colors used are white, grey and black. A characteristic tone of yellow, blue and red are also visible in the proportion.
 
 ### Proportion of transparent colors
 
@@ -600,6 +645,22 @@ trans_count %>%
   annotate(geom="text", x=1.9, y=20, label="Transparent", size=7, color=font_color) + 
   annotate(geom="text", x=1.9, y=125, label="Non-transparent", size=7, color=font_color)
 ```
+
+This simple piechart represents the proportion of transparent and non-transparent colors in the colors dataset.
+
+------------------------------------------------------------------------
+
+# Conclusions
+
+------------------------------------------------------------------------
+
+  In this data analysis, multiple different aspects of the data have been considered, particularly pertaining to how the Lego landscape has changed through sets and themes. It has been noted that throughout the years, many themes have been introduced, and in some aspects, the popularity of those themes, as reflected through the number of produced sets, coincided with real-world events that influenced the popularity of brands the themes were based on. Additionally, when viewing time-series data as in this analysis, real-world events can be seen reflected in the data. For example, the introduction of "Modulex bricks" had a significant impact on the number of produced unique Lego parts that year. Furthermore, the continued, exponential increase in the number of produced sets may reflect the continued growth of the Lego company, at least theoretically.
+
+  Secondly, the relation between themes and unique parts was explored, giving Lego collectors a possible view of which themes may be worth investing in to acquire the most unique Lego collection. Lastly, the relation between colors present in Lego parts was also visualized to show what sorts of color arrangements a potential buyer may expect from the average Lego set.
+
+  The limiting factor and things worth considering in future analyses may include data pertaining to the sales of Lego sets, with the price of the individual set as well as sales of individual sets being included. Such data would allow the analysis to further dive into the relations between past popularity of sets/themes, real-world events, and future decisions regarding sets and themes production. However, due to the sensitivity of such data, it is understandable why such data would not be published.
+
+  In conclusion, the analysis allowed the readers to gain insight into the past trends present in Lego, as well as visualize some interesting relations between sets and themes, unique parts and themes, as well as understand the most common colors used when creating Lego parts.
 
 ```{r logo, out.width = "700px", echo=F, fig.align='left'}
 knitr::include_graphics("imgs/PP_logotyp_black.png")
