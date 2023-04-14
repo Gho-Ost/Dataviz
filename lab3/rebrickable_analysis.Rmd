@@ -24,8 +24,7 @@ output:
 knitr::include_graphics("imgs/PP_monogram_kontur.png")
 ```
 
-```{r echo, out.width = "100px", echo=F, fig.align='left'}
-# Set echo to false, figure width to approximately the width of code chunks
+```{r knit_setup, echo=F, out.width = "100px", fig.align='left'}
 knitr::opts_chunk$set(
   warning=F, message=F, fig.width = 9.67
 )
@@ -37,13 +36,7 @@ knitr::opts_chunk$set(
 
 ------------------------------------------------------------------------
 
-  The following analysis is based on a publicly available Rebrickable database containing information about lego parts, colors, types of parts,
-as well as sets and themes, containing the year of production for each set, and much more. The goal of the analysis is to visualize and draw conclusions
-when it comes to relations between the aforementioned attributes with a special emphasis on the time data analysis as a means
-of understanding how the previous changes and trends when it comes to the relationship between available attributes,
-influenced future company decisions and as such may at some point allow drawing further conclusions in the future. 
-Lastly, emphasis has also been placed on analyzing unique and rare Lego parts to understand
-what themes may be particularly likely and in effect what the collectors should set their sights on.
+  The following analysis is based on a publicly available Rebrickable database containing information about LEGO parts, colors, types of parts, as well as sets and themes, containing the year of production for each set, and much more. The goal of the analysis is to visualize and draw conclusions when it comes to relations between the aforementioned attributes with a special emphasis on the time data analysis as a means of understanding how the previous changes, trends and relationships between available attributes, influenced future company decisions and as such may at some point allow drawing further conclusions in the future. Lastly, emphasis has also been placed on analyzing unique and rare LEGO parts to understand what themes may be particularly likely to contain them and in effect what the collectors should set their sights on.
 
 ------------------------------------------------------------------------
 
@@ -127,8 +120,42 @@ set_themes_children <- set_themes_children %>%
 
 ### Distribution of Themed Set Releases
 
+```{r Bridge_code, eval=F}
+ridge_years <- seq(1940, 2020, by=10)
+
+set_themes_children %>% 
+  ggplot(aes(x=year, y=as.character(parent_name), fill=as.character(parent_name))) +
+  geom_density_ridges(alpha=0.6, bandwidth=0.8, color="#CCCCCC") +
+  theme_ridges() +
+  scale_x_continuous(breaks = ridge_years, limits = c(1945, 2025)) +
+  ggtitle("Distribution of Themed Set Releases in Years 1949-2023") +
+  theme(legend.position = "none", 
+        plot.background = element_rect(fill=background_color),
+        plot.title = element_text(size=title_size, colour = font_color, hjust=1.7),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_blank(),
+        axis.text.x = element_text(size=tick_size, color = tick_color),
+        axis.text.y = element_text(size=tick_size, color = tick_color),
+        panel.grid.major.x = element_line(color = rgb(235, 235, 235, 100, maxColorValue = 255)),
+        panel.background = element_rect(fill=background_color)) +
+  annotate("text", x = ridge_years+1.5, y = 141.75, label = ridge_years, angle = 90, size=4,
+           color="white") +
+  annotate("text", x = ridge_years+1.5, y = 120, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 100, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 80, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 60, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 40, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6) +
+  annotate("text", x = ridge_years+1.5, y = 20, label = ridge_years, angle = 90, size=4,
+           color="white", alpha=0.6)
+```
+
 ::: vscroll-plot
-```{r Bridge, fig.height=40, fig.width=9}
+```{r Bridge_exec, fig.height=40, fig.width=9, echo=F}
 ridge_years <- seq(1940, 2020, by=10)
 
 set_themes_children %>% 
@@ -375,35 +402,6 @@ The plot shows the cumulative sum of unique LEGO blocks produced in a given year
 
 The graph shows how the total number of unique blocks increased through the years. Interestingly enough, the growth appears to be about exponential in nature although not completely smooth, with significant increases in a given year being noticeable on the plot's line.
 
-### Number of Rare LEGO Parts vs Average Number of Parts for a Theme
-
-```{r Muniquevsaverage, warning=F}
-result <- merged_counts
-theme_counts <- result %>%
-  group_by(name.y) %>%
-  summarize(num_parts = mean(num_parts), count = sum(count)) %>%
-  arrange(desc(count))
-
-theme_counts <- head(arrange(theme_counts,desc(count)),100)
-theme_counts <- theme_counts %>% rename('Average Number of Parts' = num_parts) %>%
-  rename('Number of Rare LEGO Parts'=count)
-
-ggplotly(ggplot(theme_counts, aes(x = theme_counts$'Average Number of Parts',
-                                  y = theme_counts$'Number of Rare LEGO Parts',
-                                  text = name.y)) +
-           geom_point(color=teal) +
-           labs(x = "Average Number of Parts", y = "Number of Rare LEGO Parts") +
-           ggtitle("Number of Rare LEGO Parts vs Average Number of Parts for a Theme") +
-  theme(plot.background = element_rect(fill=background_color),
-        plot.title=element_text(size=title_size, colour = font_color, hjust = 1),
-        axis.title.x = element_text(size=label_size, colour = font_color),
-        axis.title.y = element_text(size=label_size, colour = font_color),
-        axis.text = element_text(size=tick_size, color = tick_color),
-        panel.background = element_rect(fill=background_color)))
-```
-
-This interactive scatterplot shows the number of rare LEGO parts on the y-axis and the average number of parts in a set for a given theme. Meaning that each point is a theme with a given number of rare LEGO parts and given average number of parts for a set. The rare LEGO parts on this plot refer to LEGO parts/blocks that appear in only one of the sets across all themes. Using this plot, collectors can see which themes are most worth buying when it comes to getting the highest number of unique parts among non-unique LEGO parts.
-
 ### Average Number of Parts per Set
 
 ```{r Mavpartset}
@@ -443,6 +441,35 @@ For example, the average number of parts in a LEGO set was much higher in the ye
 
 A section devoted to plots relating data regarding parts and themes
 
+### Number of Rare LEGO Parts vs Average Number of Parts for a Theme
+
+```{r Muniquevsaverage, warning=F}
+result <- merged_counts
+theme_counts <- result %>%
+  group_by(name.y) %>%
+  summarize(num_parts = mean(num_parts), count = sum(count)) %>%
+  arrange(desc(count))
+
+theme_counts <- head(arrange(theme_counts,desc(count)),100)
+theme_counts <- theme_counts %>% rename('Average Number of Parts' = num_parts) %>%
+  rename('Number of Rare LEGO Parts'=count)
+
+ggplotly(ggplot(theme_counts, aes(x = theme_counts$'Average Number of Parts',
+                                  y = theme_counts$'Number of Rare LEGO Parts',
+                                  text = name.y)) +
+           geom_point(color=teal) +
+           labs(x = "Average Number of Parts", y = "Number of Rare LEGO Parts") +
+           ggtitle("Number of Rare LEGO Parts vs Average Number of Parts for a Theme") +
+  theme(plot.background = element_rect(fill=background_color),
+        plot.title=element_text(size=title_size-1, colour = font_color, hjust = 1),
+        axis.title.x = element_text(size=label_size, colour = font_color),
+        axis.title.y = element_text(size=label_size, colour = font_color),
+        axis.text = element_text(size=tick_size, color = tick_color),
+        panel.background = element_rect(fill=background_color)))
+```
+
+This interactive scatterplot shows the number of rare LEGO parts on the y-axis and the average number of parts in a set for a given theme. Meaning that each point is a theme with a given number of rare LEGO parts and given average number of parts for a set. The rare LEGO parts on this plot refer to LEGO parts/blocks that appear in only one of the sets across all themes. Using this plot, collectors can see which themes are most worth buying when it comes to getting the highest number of unique parts among non-unique LEGO parts.
+
 ### Themes with the Highest Amount of Unique LEGO Parts
 
 ```{r Mpartthemes}
@@ -470,11 +497,9 @@ ggplot(result_2, aes(x = n, y = reorder(name.y, n))) +
         panel.background = element_rect(fill=background_color))
 ```
 
-Graph Explanation:
 The horizontal barchart shows the names of 20 themes with the highest number of unique LEGO parts ordered according to the decreasing number of unique LEGO parts.
 Unique parts in this case are defined as all LEGO parts that appear only in one set.
 
-Graph Description/Intermediate Conclusions:
 Themes with highest number of unique parts include, among many others, themes like: "Duplo and Explore", "Ninjago" and "Star Wars". It appears that themes that could be considered to be visually "unique" are also more likely be chosen as a set with highest number of unique parts. Some themes may also end up gaining advantage in this category thanks to them having more sets overall, like the "Star Wars" theme.
 
 ### Average and Maximum Number of Parts
@@ -654,13 +679,13 @@ This simple piechart represents the proportion of transparent and non-transparen
 
 ------------------------------------------------------------------------
 
-  In this data analysis, multiple different aspects of the data have been considered, particularly pertaining to how the Lego landscape has changed through sets and themes. It has been noted that throughout the years, many themes have been introduced, and in some aspects, the popularity of those themes, as reflected through the number of produced sets, coincided with real-world events that influenced the popularity of brands the themes were based on. Additionally, when viewing time-series data as in this analysis, real-world events can be seen reflected in the data. For example, the introduction of "Modulex bricks" had a significant impact on the number of produced unique Lego parts that year. Furthermore, the continued, exponential increase in the number of produced sets may reflect the continued growth of the Lego company, at least theoretically.
+  In this data analysis, multiple different aspects of the data have been considered, particularly pertaining to how the LEGO landscape has changed through sets and themes. It has been noted that throughout the years, many themes have been introduced, and in some aspects, the popularity of those themes, as reflected through the number of produced sets, coincided with real-world events that influenced the popularity of brands the themes were based on. Additionally, when viewing time-series data as in this analysis, real-world events can be seen reflected in the data. For example, the introduction of "Modulex bricks" had a significant impact on the number of produced unique LEGO parts that year. Furthermore, the continued, exponential increase in the number of produced sets may reflect the continued growth of the LEGO company, at least theoretically.
 
-  Secondly, the relation between themes and unique parts was explored, giving Lego collectors a possible view of which themes may be worth investing in to acquire the most unique Lego collection. Lastly, the relation between colors present in Lego parts was also visualized to show what sorts of color arrangements a potential buyer may expect from the average Lego set.
+  Secondly, the relation between themes and unique parts was explored, giving LEGO collectors a possible view of which themes may be worth investing in to acquire the most unique LEGO collection. Lastly, the relation between colors present in LEGO parts was also visualized to show what sorts of color arrangements a potential buyer may expect from the average LEGO set.
 
-  The limiting factor and things worth considering in future analyses may include data pertaining to the sales of Lego sets, with the price of the individual set as well as sales of individual sets being included. Such data would allow the analysis to further dive into the relations between past popularity of sets/themes, real-world events, and future decisions regarding sets and themes production. However, due to the sensitivity of such data, it is understandable why such data would not be published.
+  The limiting factor and things worth considering in future analyses may include data pertaining to the sales of LEGO sets, with the price of the individual set as well as sales of individual sets being included. Such data would allow the analysis to further dive into the relations between past popularity of sets/themes, real-world events, and future decisions regarding sets and themes production. However, due to the sensitivity of such data, it is understandable why such data would not be published.
 
-  In conclusion, the analysis allowed the readers to gain insight into the past trends present in Lego, as well as visualize some interesting relations between sets and themes, unique parts and themes, as well as understand the most common colors used when creating Lego parts.
+  In conclusion, the analysis allowed the readers to gain insight into the past trends present in LEGO, as well as visualize some interesting relations between sets and themes, unique parts and themes, as well as understand the most common colors used when creating LEGO parts.
 
 ```{r logo, out.width = "700px", echo=F, fig.align='left'}
 knitr::include_graphics("imgs/PP_logotyp_black.png")
