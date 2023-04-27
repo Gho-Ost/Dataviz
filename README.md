@@ -1,2 +1,1 @@
-# Dataviz
-Files for DataViz course assignments
+Files for assignments done in pairs
