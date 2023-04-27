@@ -1,2 +1,3 @@
 - movielens_rules: year | very bad/bad/mediocre/good/very good for each user
 - movielens_rules_interval_years: year_interval | mediocre/bad/good for each user
+- movielens_rules_interval_years_good: year_interval | bad/good for each user
