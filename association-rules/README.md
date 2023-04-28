@@ -3,3 +3,4 @@
 - movielens_rules_interval_years_good: year_interval | bad/good for each user
 - Association_Rules_Movies.ipynb: user_review | bad/medium/good for each film
 - Association_Rules_Movies.ipynb: user_review | film good/not good
+- Association_Rules_2.ipynb: each row->a movie review | columns: genre, review(bad, medium, good), year(old<2000, new>2000)
