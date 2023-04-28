@@ -4,3 +4,4 @@
 - Association_Rules_Movies.ipynb: user_review | bad/medium/good for each film
 - Association_Rules_Movies.ipynb: user_review | film good/not good
 - Association_Rules_2.ipynb: each row->a movie review | columns: genre, review(bad, medium, good), year(old<2000, new>2000)
+- Association_Rules_4.ipynb: each row represents a user, each column has review for each movie (how the film was reviewed by the user, low<3.0, medium=3 ,high>3), then for each genre an average of the user's reviews of all films belongign to that genre was taken(if the average was above 4.0 than 1 else 0), similarly for old vs new films(also old<2000, new>2000) and lastly when the user watches the films was taken into account(count when the reviews where submitted, most reviews in day of  the week=1, else 0)
