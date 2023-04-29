@@ -3,4 +3,8 @@ Every combination of year and simplified rating value (very bad/bad/mediocre/goo
 distinct user occurances of year-rating combinations were binarized (1902|very bad:0/1, 1902|bad:0/1 etc.). 
 Resulting rules formed associations of the following arrangement: (1994|good, 1993|good) -> (1995|good). 
 This approach did not produce very informative results and the experiment was generalized to include year intervals (e.g. (1995,2000]) and a narrower rating scale (bad/mediocre/good). 
-Despite the changes, finding informative rules was difficult some of the conclusions seemed to not exclude their counterpart.
+Despite the changes, finding informative rules was difficult. 
+Many of the rules seemed to not exclude existence of other rules that would imply a different conclusion.
+This might be due to the fact that counting at least a single occurance of a rating in a year interval is not representative of the likelihood of
+different ratings appearing together as the information about the frequency of ratings is lost due to the chosen grouping.
+
