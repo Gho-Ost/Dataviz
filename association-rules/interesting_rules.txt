@@ -2,6 +2,7 @@
 - people who like a movie that is a part of a popular series (e.g. Star Wars V, VI) will rate highly other parts of the series
 (Star Wars IV)
 
+=============================================================================
 minsup: 0.1:
 frequent itemsets with information about movie ratings contain  almost entirely high ratings
 
